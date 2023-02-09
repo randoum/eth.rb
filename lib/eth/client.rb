@@ -391,12 +391,16 @@ module Eth
 
     # Metafunction to provide all known RPC commands defined in
     # {Eth::Api} as snake_case methods to the {Eth::Client} classes.
-    Api::COMMANDS.each do |cmd|
-      method_name = cmd.gsub(/([a-z\d])([A-Z])/, '\1_\2').downcase
-      define_method method_name do |*args|
-        send_command cmd, args
+    def self.define_commands(*commands)
+      commands.each do |cmd|
+        method_name = cmd.gsub(/([a-z\d])([A-Z])/, '\1_\2').downcase
+        define_method method_name do |*args|
+          send_command cmd, args
+        end
       end
     end
+
+    define_commands(*Api::COMMANDS)
 
     private
 
